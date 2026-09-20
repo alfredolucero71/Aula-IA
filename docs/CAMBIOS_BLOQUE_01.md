@@ -1,0 +1,2 @@
+# Cambios
+- Infraestructura inicial.
