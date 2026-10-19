@@ -391,9 +391,7 @@ function App() {
 
                 <button
                   onClick={() =>
-                    showComingSoon(
-                      "La prueba gratuita estará disponible próximamente."
-                    )
+                    setAuthMode("register")
                   }
                   className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 shadow-2xl shadow-white/10 transition hover:-translate-y-1 hover:bg-cyan-100"
                 >
@@ -890,9 +888,7 @@ function App() {
 
               <button
                 onClick={() =>
-                  showComingSoon(
-                    "El registro estará disponible próximamente."
-                  )
+                  setAuthMode("register")
                 }
                 className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 transition hover:-translate-y-1 hover:bg-cyan-100"
               >
