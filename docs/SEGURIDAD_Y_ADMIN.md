@@ -9,7 +9,7 @@
 5. Ejecutar npm run admin:create --prefix backend desde la raíz del repositorio.
 6. Iniciar sesión con esa cuenta, confirmar el acceso al panel y luego quitar ADMIN_PASSWORD del archivo local backend/.env. Conservarla en un gestor seguro.
 
-El comando solo debe crear un administrador si no existe ninguno y el correo no está registrado. No debe existir un endpoint público para convertir una cuenta en administrador.
+El comando se detiene si ya existe un administrador o si el correo ya está registrado. No hay un endpoint público para convertir una cuenta en administrador. El comando es una utilidad de configuración local; no se ha ejecutado contra la base del repositorio.
 
 ## Controles añadidos en esta rama
 
@@ -24,6 +24,7 @@ El repositorio contiene backend/database/aulaia.sqlite. La inspección textual p
 
 ## Pendiente antes de producción
 
-- Ejecutar instalación, chequeo sintáctico y pruebas de registro, login, aprobación, suspensión y administración.
+- Ejecutar npm run check:backend desde la raíz después de instalar las dependencias.
+- Ejecutar pruebas de registro, login, aprobación, suspensión y administración.
 - Verificar CORS, HTTPS, copias de seguridad, política de retención y recuperación de acceso.
 - Revisar el contenido de la base SQLite versionada antes de cualquier despliegue.
