@@ -1,0 +1,5 @@
+Archivo temporal para verificar la escritura de ChatGPT en GitHub.
+
+Rama: test/conexion-github
+Propósito: prueba de permisos de escritura.
+No forma parte de la aplicación AulaIA y puede eliminarse después de la verificación.
