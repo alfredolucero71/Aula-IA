@@ -198,7 +198,7 @@ function App() {
 
             <button
               onClick={() =>
-                setAuthMode("register")
+                setAuthMode("login")
               }
               className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/5"
             >
