@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, LogIn, UserPlus, ShieldCheck, Clock3 } from "lucide-react";
 
 const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
@@ -10,6 +10,14 @@ export default function AuthPanel({ mode, onClose }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (mode && !user) {
+      setView(mode === "register" ? "register" : "login");
+      setError("");
+      setNotice("");
+    }
+  }, [mode, user]);
 
   if (!mode) return null;
 
