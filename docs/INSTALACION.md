@@ -3,8 +3,7 @@
 ## Requisitos
 
 - Node.js compatible con las versiones declaradas en los paquetes del proyecto.
-- npm.
-- Git para obtener el repositorio.
+- npm y Git.
 
 ## 1. Instalar dependencias
 
@@ -16,9 +15,15 @@ npm run install:all
 
 ## 2. Configurar el backend
 
-Copiar `backend/.env.example` como `backend/.env` y completar los valores locales. Generar un `JWT_SECRET` largo, aleatorio y exclusivo para cada entorno. No usar contraseñas de ejemplo en producción ni compartir el archivo `.env`.
+Copiar `backend/.env.example` como `backend/.env`. Configurar un `JWT_SECRET` aleatorio propio de al menos 32 caracteres y valores locales válidos para la base de datos. No compartir el archivo `.env` ni usar valores de ejemplo en producción.
 
-Antes de un despliegue real, verificar cómo se crea el primer usuario administrador y completar el procedimiento de configuración segura. No asumir que `ADMIN_EMAIL` y `ADMIN_PASSWORD` crean automáticamente una cuenta administradora.
+Para crear el primer administrador, configurar `ADMIN_EMAIL` y `ADMIN_PASSWORD` con un correo propio y una contraseña única de al menos 16 caracteres; luego ejecutar:
+
+```bash
+npm --prefix backend run admin:create
+```
+
+El comando se detiene si ya existe un administrador o si el correo ya pertenece a otra cuenta. Después de crear la cuenta, quitar `ADMIN_PASSWORD` del archivo local y conservarla en un gestor seguro. Detalles en `docs/SEGURIDAD_Y_ADMIN.md`.
 
 ## 3. Iniciar el backend
 
@@ -40,15 +45,16 @@ npm run dev:frontend
 
 Vite informa la URL local en la consola; la configuración actual utiliza el puerto 5173.
 
-## 5. Compilar el frontend
+## 5. Comprobaciones disponibles
 
 ```bash
+npm run check:backend
 npm run build
 ```
 
 ## Advertencias
 
-- Estos pasos documentan la configuración prevista; no implican que la instalación o compilación se hayan ejecutado y verificado en este cambio.
+- Estos pasos documentan la configuración prevista; no implican que la instalación, compilación o pruebas se hayan ejecutado y verificado en este cambio.
 - El backend heredado ubicado en la raíz no es la entrada recomendada. Usar los comandos de este documento.
-- No cargar datos reales de estudiantes ni docentes durante pruebas iniciales.
-- Antes de publicar, revisar CORS, secretos, creación del administrador, persistencia SQLite, copias de seguridad, aprobación de cuentas y despliegue HTTPS.
+- No cargar datos reales de estudiantes ni docentes durante las pruebas iniciales.
+- Antes de publicar, revisar CORS, secretos, contenido de SQLite, copias de seguridad, aprobación de cuentas y HTTPS.
