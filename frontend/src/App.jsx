@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import RobotAssistant from "./components/landing/RobotAssistant";
+import AuthPanel from "./components/auth/AuthPanel";
 
 import "./App.css";
 
@@ -82,6 +83,7 @@ const faqs = [
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [authMode, setAuthMode] = useState(null);
 
   const scrollTo = (id) => {
     setMenuOpen(false);
@@ -196,9 +198,7 @@ function App() {
 
             <button
               onClick={() =>
-                showComingSoon(
-                  "El registro estará disponible próximamente."
-                )
+                setAuthMode("register")
               }
               className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/5"
             >
@@ -207,9 +207,7 @@ function App() {
 
             <button
               onClick={() =>
-                showComingSoon(
-                  "La prueba gratuita estará disponible próximamente."
-                )
+                setAuthMode("register")
               }
               className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-950 shadow-xl shadow-white/10 transition hover:-translate-y-0.5 hover:bg-cyan-100"
             >
@@ -252,9 +250,7 @@ function App() {
 
               <button
                 onClick={() =>
-                  showComingSoon(
-                    "La prueba gratuita estará disponible próximamente."
-                  )
+                  setAuthMode("register")
                 }
                 className="mt-2 rounded-xl bg-white px-4 py-3 font-bold text-slate-950"
               >
@@ -1034,6 +1030,10 @@ function App() {
         </div>
 
       </footer>
+
+      <AuthPanel mode={authMode} onClose={() => setAuthMode(null)} />
+
+
 
     </div>
   );
