@@ -2,21 +2,21 @@
 
 ## Crear el primer administrador
 
-1. Copiar backend/.env.example a backend/.env.
+1. Copiar backend/.env.example como backend/.env.
 2. Configurar JWT_SECRET con un valor aleatorio propio de al menos 32 caracteres. No reutilizar el ejemplo ni compartirlo.
 3. Configurar ADMIN_EMAIL y ADMIN_PASSWORD con un correo propio y una contraseña única de al menos 16 caracteres.
-4. Instalar las dependencias con npm run install:all desde la raíz.
-5. Ejecutar npm run admin:create --prefix backend desde la raíz del repositorio.
-6. Iniciar sesión con esa cuenta, confirmar el acceso al panel y luego quitar ADMIN_PASSWORD del archivo local backend/.env. Conservarla en un gestor seguro.
+4. Instalar las dependencias desde la raíz con npm run install:all.
+5. Ejecutar desde la raíz: npm --prefix backend run admin:create.
+6. Iniciar sesión con esa cuenta, confirmar el acceso y luego quitar ADMIN_PASSWORD de backend/.env. Conservar la contraseña en un gestor seguro.
 
-El comando se detiene si ya existe un administrador o si el correo ya está registrado. No hay un endpoint público para convertir una cuenta en administrador. El comando es una utilidad de configuración local; no se ha ejecutado contra la base del repositorio.
+El comando se detiene si ya existe un administrador o si el correo ya está registrado. No hay un endpoint público para convertir una cuenta en administrador. Esta utilidad local no se ha ejecutado contra la base del repositorio.
 
-## Controles añadidos en esta rama
+## Controles incluidos en esta rama
 
 - El entorno de producción rechaza un JWT_SECRET débil o de ejemplo.
-- Los endpoints de registro e inicio de sesión tienen límite de intentos y validación de entradas.
-- Cada petición autenticada consulta el estado y rol actuales en la base de datos; suspender una cuenta bloquea el uso de tokens anteriores.
-- Las contraseñas se almacenan mediante bcrypt en el flujo existente.
+- Registro e inicio de sesión tienen límite de intentos y validación de entradas.
+- Cada petición autenticada consulta el estado y rol actuales en SQLite; suspender una cuenta bloquea el uso de tokens anteriores.
+- El flujo existente usa bcrypt para almacenar contraseñas.
 
 ## Base SQLite versionada
 
@@ -24,7 +24,7 @@ El repositorio contiene backend/database/aulaia.sqlite. La inspección textual p
 
 ## Pendiente antes de producción
 
-- Ejecutar npm run check:backend desde la raíz después de instalar las dependencias.
-- Ejecutar pruebas de registro, login, aprobación, suspensión y administración.
-- Verificar CORS, HTTPS, copias de seguridad, política de retención y recuperación de acceso.
-- Revisar el contenido de la base SQLite versionada antes de cualquier despliegue.
+- Ejecutar npm run check:backend desde la raíz después de instalar dependencias.
+- Probar registro, inicio de sesión, aprobación, suspensión y administración.
+- Verificar CORS, HTTPS, copias de seguridad, retención y recuperación de acceso.
+- Revisar el contenido de la base SQLite versionada antes de desplegar.
