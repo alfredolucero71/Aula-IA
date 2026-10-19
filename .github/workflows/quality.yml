@@ -1,0 +1,38 @@
+name: Verificación de AulaIA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Instalar backend
+        run: npm ci --prefix backend
+
+      - name: Instalar frontend
+        run: npm ci --prefix frontend
+
+      - name: Comprobar sintaxis del backend
+        run: npm run check:backend
+
+      - name: Compilar frontend
+        run: npm run build
