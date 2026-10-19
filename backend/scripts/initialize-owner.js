@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import env from "../config/env.js";
 import db from "../config/database.js";
+import { initializeDatabase } from "../database/init.js";
 import { createUser, findUserByEmail } from "../repositories/user.repository.js";
 
 const getAdminCount = () => new Promise((resolve, reject) => {
@@ -11,6 +12,7 @@ const getAdminCount = () => new Promise((resolve, reject) => {
 });
 
 async function run() {
+  await initializeDatabase();
   const email = env.adminEmail.trim().toLowerCase();
   const password = env.adminPassword;
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Set a valid ADMIN_EMAIL in backend/.env.");
