@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   frontend:
-    name: Compilar frontend y PWA
+    name: Compilar y empaquetar PWA
     runs-on: ubuntu-latest
     steps:
       - name: Descargar código
@@ -26,6 +26,20 @@ jobs:
         run: npm ci --prefix frontend
       - name: Compilar
         run: npm --prefix frontend run build
+      - name: Verificar archivos PWA generados
+        run: |
+          test -s frontend/dist/index.html
+          test -s frontend/dist/manifest.webmanifest
+          test -s frontend/dist/sw.js
+          test -s frontend/dist/icons/aulaia-192.svg
+          test -s frontend/dist/icons/aulaia-512.svg
+      - name: Empaquetar frontend instalable
+        uses: actions/upload-artifact@v4
+        with:
+          name: AulaIA-PWA
+          path: frontend/dist/
+          if-no-files-found: error
+          retention-days: 14
 
   backend:
     name: Verificar sintaxis del backend
