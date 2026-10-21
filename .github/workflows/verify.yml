@@ -2,7 +2,7 @@ name: Verificar AulaIA
 
 on:
   push:
-    branches: ["main", "feature/pwa-installable"]
+    branches: ["main", "feature/pwa-installable", "deploy/github-pages"]
   pull_request:
     branches: ["main"]
 
@@ -26,6 +26,8 @@ jobs:
         run: npm ci --prefix frontend
       - name: Compilar
         run: npm --prefix frontend run build
+        env:
+          GITHUB_PAGES: "true"
       - name: Verificar archivos PWA generados
         run: |
           test -s frontend/dist/index.html
@@ -34,7 +36,8 @@ jobs:
           test -s frontend/dist/icons/aulaia-192.svg
           test -s frontend/dist/icons/aulaia-512.svg
           node --check frontend/dist/sw.js
-          node --input-type=module -e 'import fs from "node:fs"; const m = JSON.parse(fs.readFileSync("frontend/dist/manifest.webmanifest", "utf8")); if (!m.name || !m.start_url || m.display !== "standalone" || !Array.isArray(m.icons) || m.icons.length < 2) process.exit(1); console.log("Manifiesto PWA válido:", m.name);'
+          node --input-type=module -e 'import fs from "node:fs"; const m = JSON.parse(fs.readFileSync("frontend/dist/manifest.webmanifest", "utf8")); if (!m.name || m.start_url !== "./" || m.scope !== "./" || m.display !== "standalone" || !Array.isArray(m.icons) || m.icons.length < 2) process.exit(1); console.log("Manifiesto PWA válido:", m.name);'
+          grep -q 'href="/Aula-IA/manifest.webmanifest"' frontend/dist/index.html
       - name: Empaquetar frontend instalable
         uses: actions/upload-artifact@v4
         with:
