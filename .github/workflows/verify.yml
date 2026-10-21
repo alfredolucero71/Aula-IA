@@ -1,0 +1,45 @@
+name: Verificar AulaIA
+
+on:
+  push:
+    branches: ["main", "feature/pwa-installable"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Compilar frontend y PWA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instalar dependencias del frontend
+        run: npm ci --prefix frontend
+      - name: Compilar
+        run: npm --prefix frontend run build
+
+  backend:
+    name: Verificar sintaxis del backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Instalar dependencias del backend
+        run: npm ci --prefix backend
+      - name: Verificar sintaxis
+        run: npm run check:backend
