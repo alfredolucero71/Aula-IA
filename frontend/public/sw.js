@@ -56,14 +56,24 @@ self.addEventListener("fetch", (event) => {
   if (["script", "style", "image", "font"].includes(request.destination)) {
     event.respondWith(
       caches.match(request).then((cached) => {
-        const network = fetch(request).then((response) => {
+        if (cached) {
+          // Actualizar la caché en segundo plano sin fallar la respuesta ya disponible.
+          fetch(request).then((response) => {
+            if (response.ok) {
+              const copy = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            }
+          }).catch(() => {});
+          return cached;
+        }
+
+        return fetch(request).then((response) => {
           if (response.ok) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
           return response;
         });
-        return cached || network;
       })
     );
   }
