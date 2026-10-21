@@ -1,18 +1,16 @@
-# AulaIA — primera versión PWA
+# AulaIA — PWA y publicación en GitHub Pages
 
-AulaIA es una aplicación web progresiva orientada al piloto de docentes fundadores. Esta rama añade la base instalable; no significa que el servicio esté publicado ni que el flujo completo de agentes ya esté integrado.
+AulaIA es una aplicación web progresiva orientada al piloto de docentes fundadores. GitHub Pages publica el frontend estático para que pueda instalarse desde Chrome o Edge; no aloja el backend, la API, SQLite ni los agentes.
 
-## Funciones incluidas en esta etapa
+## Publicación
 
-- Manifiesto web en `frontend/public/manifest.webmanifest`.
-- Iconos SVG de aplicación.
-- Registro del service worker solo en compilación de producción.
-- Caché del shell de la aplicación y fallback de navegación para abrir la interfaz sin conexión después de una primera carga correcta.
-- Aviso de instalación cuando el navegador ofrece el evento `beforeinstallprompt`.
-- Exclusión deliberada de rutas `/api/` de la caché: no se guardan respuestas, sesiones ni datos de usuarios.
-- Flujo de verificación automática para compilación del frontend y comprobación sintáctica del backend.
+El workflow `.github/workflows/deploy-pages.yml` compila el frontend para el prefijo `/Aula-IA/` y publica `frontend/dist`. En GitHub, el propietario debe configurar **Settings → Pages → Build and deployment → Source: GitHub Actions**. Después del primer despliegue, la dirección del proyecto es:
 
-## Compilar y probar localmente
+`https://alfredolucero71.github.io/Aula-IA/`
+
+Los cambios en `main` vuelven a compilar y publicar el sitio.
+
+## Compilar localmente
 
 Desde la raíz del repositorio:
 
@@ -22,39 +20,30 @@ npm --prefix frontend run build
 npm --prefix frontend run preview
 ```
 
-Abrí la URL que informe Vite Preview. Para probar service workers y la instalación real, usá `localhost` o un sitio servido por HTTPS. El servidor de desarrollo de Vite no registra el service worker, por diseño.
+La compilación normal usa raíz `/`. Para generar exactamente el artefacto de GitHub Pages, establecer `GITHUB_PAGES=true` antes del build.
 
-En otra terminal se puede comprobar el backend:
+## Instalar en Windows
 
-```bash
-npm ci --prefix backend
-npm run check:backend
-```
+1. Abrir la dirección HTTPS en Chrome o Edge.
+2. Esperar a que carguen la página y los recursos.
+3. Usar el icono de instalación del navegador o el menú **Instalar AulaIA**.
+4. Abrir AulaIA desde el acceso directo instalado.
 
-## Instalar en escritorio
+El paquete PWA no es un instalador `.exe` ni `.msi`. La instalación la gestiona Chrome o Edge. La disponibilidad del aviso de instalación depende de los criterios del navegador.
 
-1. Abrí AulaIA mediante Chrome o Edge en `localhost` o HTTPS.
-2. Esperá a que termine la carga inicial y el navegador detecte los requisitos de instalación.
-3. Si el navegador ofrece la opción, usá **Instalar AulaIA** o el icono de instalación de la barra de direcciones.
-4. Abrí la aplicación desde el acceso directo creado.
+## Funciones y límites
 
-En navegadores o dispositivos que no exponen `beforeinstallprompt`, la interfaz no muestra un botón falso: usá la opción de instalación que ofrezca el propio navegador, si está disponible.
+- El manifiesto, los iconos y el service worker permiten instalar la interfaz y abrir el shell previamente descargado.
+- El service worker no almacena respuestas de la API, sesiones ni datos personales.
+- El modo sin conexión no ofrece autenticación, API, base de datos ni generación IA.
+- GitHub Pages sirve únicamente archivos estáticos. El backend necesita otro hosting con HTTPS y almacenamiento persistente para SQLite antes de habilitar registro, acceso y agentes reales.
+- La interfaz actual sigue siendo una página de presentación; el ingreso y los agentes aún no están integrados.
 
-## Límites conocidos
+## Verificación antes del piloto
 
-- El modo sin conexión permite abrir el shell previamente descargado; no convierte la API, el inicio de sesión ni los agentes IA en servicios offline.
-- La integración de IA debe realizarse a través del backend y nunca exponiendo claves privadas en el frontend.
-- La instalación debe validarse en los navegadores y sistemas operativos elegidos para el piloto.
-- No hay despliegue configurado en esta entrega. Para instalación desde otros equipos, hace falta un hosting accesible por HTTPS.
-- SQLite requiere almacenamiento persistente en el servidor; no debe suponerse que cualquier hosting gratuito conserve el archivo entre reinicios o despliegues.
-
-## Lista de comprobación antes del piloto
-
-- [ ] El workflow de GitHub Actions termina correctamente.
-- [ ] La compilación genera `dist/manifest.webmanifest` y `dist/sw.js`.
-- [ ] El manifiesto y los iconos responden sin error desde Preview.
-- [ ] El service worker se registra en producción local.
-- [ ] La aplicación abre su shell sin conexión después de la primera visita.
-- [ ] Las rutas `/api/` no se cachean.
-- [ ] La instalación se prueba en al menos un navegador de escritorio objetivo.
+- [ ] El workflow de verificación y el workflow de publicación finalizan correctamente.
+- [ ] La dirección HTTPS responde y las rutas bajo `/Aula-IA/` cargan.
+- [ ] Manifiesto, iconos y service worker responden desde la ruta del proyecto.
+- [ ] El service worker abre el shell sin conexión tras una primera carga.
+- [ ] La instalación se valida en Chrome y Edge en Windows.
 - [ ] Registro, aprobación administrativa, inicio de sesión y autorización se prueban antes de incorporar datos reales.
