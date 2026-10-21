@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import RobotAssistant from "./components/landing/RobotAssistant";
+import InstallPWA from "./components/InstallPWA.jsx";
 
 import "./App.css";
 
@@ -990,6 +991,8 @@ function App() {
         </section>
 
       </main>
+
+      <InstallPWA />
 
       {/* =====================================================
           FOOTER
