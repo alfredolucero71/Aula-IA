@@ -1,12 +1,15 @@
 const CACHE_PREFIX = "aulaia-shell-";
-const CACHE_NAME = `${CACHE_PREFIX}v1`;
+const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const APP_BASE = self.registration.scope;
+const appUrl = (path = "") => new URL(path, APP_BASE).toString();
+const API_PATH = new URL("api/", APP_BASE).pathname;
 const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/favicon.svg",
-  "/icons/aulaia-192.svg",
-  "/icons/aulaia-512.svg"
+  appUrl(""),
+  appUrl("index.html"),
+  appUrl("manifest.webmanifest"),
+  appUrl("favicon.svg"),
+  appUrl("icons/aulaia-192.svg"),
+  appUrl("icons/aulaia-512.svg")
 ];
 
 self.addEventListener("install", (event) => {
@@ -36,7 +39,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
 
   // Nunca cachear API, sesiones ni datos de usuarios.
-  if (url.pathname.startsWith("/api/")) return;
+  if (url.pathname.startsWith(API_PATH)) return;
 
   if (request.mode === "navigate") {
     event.respondWith(
@@ -44,11 +47,11 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+            caches.open(CACHE_NAME).then((cache) => cache.put(appUrl("index.html"), copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("/index.html")) || (await caches.match("/")))
+        .catch(async () => (await caches.match(appUrl("index.html"))) || (await caches.match(appUrl(""))))
     );
     return;
   }
