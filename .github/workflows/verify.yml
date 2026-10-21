@@ -1,0 +1,61 @@
+name: Verificar AulaIA
+
+on:
+  push:
+    branches: ["main", "feature/pwa-installable"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Compilar y empaquetar PWA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instalar dependencias del frontend
+        run: npm ci --prefix frontend
+      - name: Compilar
+        run: npm --prefix frontend run build
+      - name: Verificar archivos PWA generados
+        run: |
+          test -s frontend/dist/index.html
+          test -s frontend/dist/manifest.webmanifest
+          test -s frontend/dist/sw.js
+          test -s frontend/dist/icons/aulaia-192.svg
+          test -s frontend/dist/icons/aulaia-512.svg
+          node --check frontend/dist/sw.js
+          node --input-type=module -e 'import fs from "node:fs"; const m = JSON.parse(fs.readFileSync("frontend/dist/manifest.webmanifest", "utf8")); if (!m.name || !m.start_url || m.display !== "standalone" || !Array.isArray(m.icons) || m.icons.length < 2) process.exit(1); console.log("Manifiesto PWA válido:", m.name);'
+      - name: Empaquetar frontend instalable
+        uses: actions/upload-artifact@v4
+        with:
+          name: AulaIA-PWA
+          path: frontend/dist/
+          if-no-files-found: error
+          retention-days: 14
+
+  backend:
+    name: Verificar sintaxis del backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Instalar dependencias del backend
+        run: npm ci --prefix backend
+      - name: Verificar sintaxis
+        run: npm run check:backend
