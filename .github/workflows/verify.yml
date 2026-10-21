@@ -33,6 +33,8 @@ jobs:
           test -s frontend/dist/sw.js
           test -s frontend/dist/icons/aulaia-192.svg
           test -s frontend/dist/icons/aulaia-512.svg
+          node --check frontend/dist/sw.js
+          node --input-type=module -e 'import fs from "node:fs"; const m = JSON.parse(fs.readFileSync("frontend/dist/manifest.webmanifest", "utf8")); if (!m.name || !m.start_url || m.display !== "standalone" || !Array.isArray(m.icons) || m.icons.length < 2) process.exit(1); console.log("Manifiesto PWA válido:", m.name);'
       - name: Empaquetar frontend instalable
         uses: actions/upload-artifact@v4
         with:
