@@ -37,7 +37,7 @@ jobs:
           test -s frontend/dist/icons/aulaia-512.svg
           node --check frontend/dist/sw.js
           node --input-type=module -e 'import fs from "node:fs"; const m = JSON.parse(fs.readFileSync("frontend/dist/manifest.webmanifest", "utf8")); if (!m.name || m.start_url !== "./" || m.scope !== "./" || m.display !== "standalone" || !Array.isArray(m.icons) || m.icons.length < 2) process.exit(1); console.log("Manifiesto PWA válido:", m.name);'
-          grep -q 'href="/Aula-IA/manifest.webmanifest"' frontend/dist/index.html
+          node --input-type=module -e 'import fs from "node:fs"; const html = fs.readFileSync("frontend/dist/index.html", "utf8"); if (!html.includes("/Aula-IA/")) process.exit(1); console.log("Prefijo de GitHub Pages encontrado en el HTML.");'
       - name: Empaquetar frontend instalable
         uses: actions/upload-artifact@v4
         with:
